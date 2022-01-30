@@ -1,7 +1,7 @@
 import 'dotenv/config'
 import { Client, Intents } from 'discord.js'
-
-const MONKE_RE = /([^a-zA-Z]|^)monkey([^a-zA-Z]|$)/;
+import { monkeListener } from './monke-check';
+import { lulListener } from './lul-check';
 
 const client = new Client({
     intents: [
@@ -12,16 +12,6 @@ const client = new Client({
     partials: ['CHANNEL']
 });
 
-client.once('ready', () => {
-    console.log('Ready!');
-});
-
-client.on('messageCreate', (message) => {
-    if (MONKE_RE.test(message.content.toLowerCase())) {
-        message.channel.send('*monke');
-    }
-});
-
 client.login(process.env.DISCORD_TOKEN)
     .then(() => {
         console.log('Login Successful!');
@@ -29,3 +19,10 @@ client.login(process.env.DISCORD_TOKEN)
     .catch((reason) => {
         console.log(reason);
     });
+
+client.once('ready', () => {
+    console.log('Ready!');
+});
+
+client.on('messageCreate', monkeListener);
+client.on('messageCreate', lulListener);
